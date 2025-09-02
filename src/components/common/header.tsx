@@ -1,0 +1,87 @@
+"use client";
+
+import { AvatarFallback } from "@radix-ui/react-avatar";
+import { LogInIcon, LogOut, MenuIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
+import { authClient } from "@/lib/authClient";
+
+import { Avatar, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
+
+const Header = () => {
+  const session = authClient.useSession();
+
+  return (
+    <header className="flex items-center justify-between p-5">
+      <Image src={"/Logo.svg"} alt="bewear" width={100} height={26.14} />
+      <div className="flex items-center">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant={"outline"}
+              size={"icon"}
+              className="cursor-pointer"
+            >
+              <MenuIcon />
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Menu</SheetTitle>
+            </SheetHeader>
+            {session.data?.user ? (
+              <div className="flex justify-between space-y-6">
+                <div className="flex items-center gap-3">
+                  <Avatar>
+                    <AvatarImage
+                      src={session.data?.user?.image as string | undefined}
+                    />
+                    <AvatarFallback>
+                      {session.data?.user?.name?.split(" ")[0]?.[0]}
+                      {session.data?.user?.name?.split(" ")[1]?.[0] ?? ""}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div>
+                    <h3 className="font-semibold">{session.data?.user.name}</h3>
+                    <span className="text-muted-foreground block text-xs">
+                      {session.data?.user.email}
+                    </span>
+                  </div>
+                </div>
+
+                <Button
+                  variant={"outline"}
+                  size={"icon"}
+                  onClick={() => authClient.signOut()}
+                >
+                  <LogOut />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between">
+                <h2 className="font-semibold">Olá. Faça seu login!</h2>
+                <Button size={"icon"} asChild variant={"outline"}>
+                  <Link href={"/authentication"} className="cursor-pointer">
+                    <LogInIcon />
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </SheetContent>
+        </Sheet>
+      </div>
+    </header>
+  );
+};
+
+export default Header;

@@ -83,14 +83,14 @@ const SignUpFormComponet = () => {
   }
   return (
     <>
-      <Card>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Cadastrar</CardTitle>
           <CardDescription>Crie sua conta para continuar.</CardDescription>
         </CardHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <CardContent className="grid gap-6">
+            <CardContent className="grid gap-6 w-full">
               <FormField
                 control={form.control}
                 name="name"
