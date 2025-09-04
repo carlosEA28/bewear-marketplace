@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { removeProductFromCart } from "@/actions/remove-cart-product";
 import { formatCents } from "@/helpers/money";
 
+import { decreaseProductFromCart } from "../../actions/decrease-product-quantity/index";
 import { Button } from "../ui/button";
 
 interface CartItemProps {
@@ -34,6 +35,14 @@ const CartItemComponent = ({
     },
   });
 
+  const decreaseCartProductMutation = useMutation({
+    mutationKey: ["decrease-cart-product-quantity"],
+    mutationFn: () => decreaseProductFromCart({ cartItemId: id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+  });
+
   const handleDeleteClick = () => {
     removeProductFromCartMutation.mutate(undefined, {
       onSuccess: () => {
@@ -43,6 +52,10 @@ const CartItemComponent = ({
         toast.error("Erro ao deletar produto do carrinho");
       },
     });
+  };
+
+  const handleDecreaseQuantityClick = () => {
+    decreaseCartProductMutation.mutate(undefined);
   };
   return (
     <div className="flex items-center justify-between">
@@ -61,7 +74,11 @@ const CartItemComponent = ({
             {productVariantName}
           </p>
           <div className="flex items-center p-1 border justify-between w-[100px] rounded-lg">
-            <Button className="h-4 w-4" variant={"ghost"} onClick={() => {}}>
+            <Button
+              className="h-4 w-4"
+              variant={"ghost"}
+              onClick={handleDecreaseQuantityClick}
+            >
               <MinusIcon />
             </Button>
 
