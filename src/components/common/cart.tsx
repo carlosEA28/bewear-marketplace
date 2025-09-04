@@ -50,6 +50,7 @@ export const Cart = () => {
                     }
                     imageUrl={item.productVariant.imageUrl}
                     quantity={item.quantity}
+                    productVariantId={item.productVariant.id}
                   />
                 ))}
               </div>

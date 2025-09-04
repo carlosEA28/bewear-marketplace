@@ -3,6 +3,7 @@ import { MinusIcon, PlusIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
+import { addProductToCart } from "@/actions/add-product-to-cart";
 import { removeProductFromCart } from "@/actions/remove-cart-product";
 import { formatCents } from "@/helpers/money";
 
@@ -16,11 +17,13 @@ interface CartItemProps {
   imageUrl: string;
   productVariantTotalPriceInCents: number;
   quantity: number;
+  productVariantId: string;
 }
 
 const CartItemComponent = ({
   id,
   imageUrl,
+  productVariantId,
   productName,
   productVariantName,
   productVariantTotalPriceInCents,
@@ -42,6 +45,13 @@ const CartItemComponent = ({
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
   });
+  const increaseCartProductMutation = useMutation({
+    mutationKey: ["increase-cart-product-quantity"],
+    mutationFn: () => addProductToCart({ productVariantId, quantity: 1 }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+  });
 
   const handleDeleteClick = () => {
     removeProductFromCartMutation.mutate(undefined, {
@@ -56,6 +66,10 @@ const CartItemComponent = ({
 
   const handleDecreaseQuantityClick = () => {
     decreaseCartProductMutation.mutate(undefined);
+  };
+
+  const handleIncreaseQuantityClick = () => {
+    increaseCartProductMutation.mutate();
   };
   return (
     <div className="flex items-center justify-between">
@@ -84,7 +98,11 @@ const CartItemComponent = ({
 
             <p className="text-xs">{quantity}</p>
 
-            <Button className="h-4 w-4" variant={"ghost"} onClick={() => {}}>
+            <Button
+              className="h-4 w-4"
+              variant={"ghost"}
+              onClick={handleIncreaseQuantityClick}
+            >
               <PlusIcon />
             </Button>
           </div>
