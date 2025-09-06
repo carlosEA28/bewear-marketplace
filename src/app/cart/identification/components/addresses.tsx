@@ -2,17 +2,22 @@
 
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { shippingAddressTable } from "@/db/schema";
 import { useAddresses } from "@/hooks/queries/use-addresses";
 
 import { AddAddressForm } from "./add-address-form";
 
-const AddressesComponent = () => {
+interface AddressesProps {
+  shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
+}
+const AddressesComponent = ({ shippingAddresses }: AddressesProps) => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
-  const { data: addresses, isLoading } = useAddresses();
+  const { data: addresses, isLoading } = useAddresses({
+    initialData: shippingAddresses,
+  });
 
   if (isLoading) {
     return <div>Carregando endereços...</div>;
