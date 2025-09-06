@@ -16,12 +16,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAddAddress } from "@/hooks/mutations/use-add-address";
 
-type AddAddressFormValues = z.infer<typeof addAddressSchema>;
+const formSchema = addAddressSchema;
 
-const AddAddressForm = () => {
-  const form = useForm<AddAddressFormValues>({
-    resolver: zodResolver(addAddressSchema),
+export function AddAddressForm() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       fullName: "",
@@ -37,13 +38,21 @@ const AddAddressForm = () => {
     },
   });
 
-  function onSubmit(values: AddAddressFormValues) {
-    console.log(values);
+  const { mutateAsync, isPending } = useAddAddress();
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await mutateAsync(values);
+      form.reset();
+    } catch (error) {
+      // O toast já é tratado no useAddAddress, mas podemos logar aqui se necessário
+      console.error("Erro ao adicionar endereço no formulário:", error);
+    }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="email"
@@ -51,7 +60,7 @@ const AddAddressForm = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="email@example.com" {...field} />
+                <Input placeholder="seuemail@exemplo.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -79,12 +88,10 @@ const AddAddressForm = () => {
               <FormControl>
                 <PatternFormat
                   format="###.###.###-##"
+                  mask="_"
                   customInput={Input}
                   placeholder="000.000.000-00"
-                  onValueChange={(values) => {
-                    field.onChange(values.value);
-                  }}
-                  value={field.value}
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
@@ -100,12 +107,10 @@ const AddAddressForm = () => {
               <FormControl>
                 <PatternFormat
                   format="(##) #####-####"
+                  mask="_"
                   customInput={Input}
-                  placeholder="(99) 99999-9999"
-                  onValueChange={(values) => {
-                    field.onChange(values.value);
-                  }}
-                  value={field.value}
+                  placeholder="(00) 00000-0000"
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
@@ -121,12 +126,10 @@ const AddAddressForm = () => {
               <FormControl>
                 <PatternFormat
                   format="#####-###"
+                  mask="_"
                   customInput={Input}
                   placeholder="00000-000"
-                  onValueChange={(values) => {
-                    field.onChange(values.value);
-                  }}
-                  value={field.value}
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
@@ -140,7 +143,7 @@ const AddAddressForm = () => {
             <FormItem>
               <FormLabel>Endereço</FormLabel>
               <FormControl>
-                <Input placeholder="Rua Exemplo" {...field} />
+                <Input placeholder="Seu endereço" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -153,7 +156,7 @@ const AddAddressForm = () => {
             <FormItem>
               <FormLabel>Número</FormLabel>
               <FormControl>
-                <Input placeholder="123" {...field} />
+                <Input placeholder="Número" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -166,7 +169,7 @@ const AddAddressForm = () => {
             <FormItem>
               <FormLabel>Complemento (opcional)</FormLabel>
               <FormControl>
-                <Input placeholder="Apartamento, Bloco, etc." {...field} />
+                <Input placeholder="Complemento" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -211,12 +214,10 @@ const AddAddressForm = () => {
             </FormItem>
           )}
         />
-        <Button className="w-full" type="submit">
+        <Button type="submit" disabled={isPending} className="w-full">
           Adicionar Endereço
         </Button>
       </form>
     </Form>
   );
-};
-
-export default AddAddressForm;
+}

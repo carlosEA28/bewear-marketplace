@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-import AddAddressForm from "./add-address-form";
+import { AddAddressForm } from "./add-address-form";
 
 const AddressesComponent = () => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
