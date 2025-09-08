@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -18,6 +19,7 @@ interface AddressesProps {
   shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
 }
 const AddressesComponent = ({ shippingAddresses }: AddressesProps) => {
+  const router = useRouter();
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const { data: addresses } = useAddresses({
     initialData: shippingAddresses,
@@ -39,6 +41,8 @@ const AddressesComponent = ({ shippingAddresses }: AddressesProps) => {
           toast.success("Sucesso", {
             description: "Endereço de entrega atualizado.",
           });
+
+          router.push("/cart/confirmation");
         },
         onError: (error) => {
           toast.error("Erro", { description: error.message });

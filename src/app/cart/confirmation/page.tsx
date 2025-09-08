@@ -4,14 +4,16 @@ import { redirect } from "next/navigation";
 
 import Footer from "@/components/common/footer";
 import Header from "@/components/common/header";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/db";
-import { cartTable, shippingAddressTable } from "@/db/schema";
+import { cartTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 import CartSummaryComponent from "../components/cart-summary";
-import AddressesComponent from "./components/addresses";
+import { formatAddress } from "../helpers/address";
 
-const IdentificationPage = async () => {
+const ConfirmationPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -40,20 +42,33 @@ const IdentificationPage = async () => {
     redirect("/");
   }
 
-  const shippingAddresses = await db.query.shippingAddressTable.findMany({
-    where: eq(shippingAddressTable.userId, session.user.id),
-  });
-
   const cartTotalPriceInCents = cart.items.reduce(
     (acc, item) => acc + item.productVariant.priceInCents * item.quantity,
     0
   );
 
+  if (!cart.shippingAddress) {
+    redirect("/cart/identification");
+  }
   return (
     <div className="">
       <Header />
-      <div className="px-5 space-y-4">
-        <AddressesComponent shippingAddresses={shippingAddresses} />
+      <div className="space-y-4 px-5">
+        <Card>
+          <CardHeader>
+            <CardTitle>Identificação</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <Card>
+              <CardContent>
+                <p className="text-sm">{formatAddress(cart.shippingAddress)}</p>
+              </CardContent>
+            </Card>
+            <Button className="w-full rounded-full" size={"lg"}>
+              Finalizar compra
+            </Button>
+          </CardContent>
+        </Card>
 
         <CartSummaryComponent
           subTotalInCents={cartTotalPriceInCents}
@@ -75,4 +90,4 @@ const IdentificationPage = async () => {
   );
 };
 
-export default IdentificationPage;
+export default ConfirmationPage;
