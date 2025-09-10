@@ -23,8 +23,12 @@ export const Cart = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon">
-          <ShoppingBasketIcon />
+        <Button
+          variant="outline"
+          size="icon"
+          className="border-none shadow-none "
+        >
+          <ShoppingBasketIcon color="#656565" />
         </Button>
       </SheetTrigger>
       <SheetContent>

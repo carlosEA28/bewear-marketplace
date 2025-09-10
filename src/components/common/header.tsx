@@ -1,6 +1,7 @@
 "use client";
 
 import { AvatarFallback } from "@radix-ui/react-avatar";
+import { Separator } from "@radix-ui/react-separator";
 import { LogInIcon, LogOut, MenuIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,14 +28,21 @@ const Header = () => {
         <Image src={"/Logo.svg"} alt="bewear" width={100} height={26.14} />
       </Link>
       <div className="flex items-center gap-3">
+        <Cart />
+
+        <Separator
+          orientation="vertical"
+          className="  h-5 border-[1.76px] rounded-full bg-[#656565]/10"
+        />
+
         <Sheet>
           <SheetTrigger asChild>
             <Button
               variant={"outline"}
               size={"icon"}
-              className="cursor-pointer"
+              className="cursor-pointer border-none shadow-none"
             >
-              <MenuIcon />
+              <MenuIcon color="#656565" />
             </Button>
           </SheetTrigger>
           <SheetContent>
@@ -82,8 +90,6 @@ const Header = () => {
             )}
           </SheetContent>
         </Sheet>
-
-        <Cart />
       </div>
     </header>
   );
