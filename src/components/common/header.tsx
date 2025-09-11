@@ -18,6 +18,7 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { Cart } from "./cart";
+import MenuOptionsComponent from "./menu-options";
 
 const Header = () => {
   const session = authClient.useSession();
@@ -32,7 +33,7 @@ const Header = () => {
 
         <Separator
           orientation="vertical"
-          className="  h-5 border-[1.76px] rounded-full bg-[#656565]/10"
+          className=" w-full h-5 border-[1.76px] rounded-full bg-[#656565]/10"
         />
 
         <Sheet>
@@ -45,12 +46,12 @@ const Header = () => {
               <MenuIcon color="#656565" />
             </Button>
           </SheetTrigger>
-          <SheetContent>
+          <SheetContent className="p-5">
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
             {session.data?.user ? (
-              <div className="flex justify-between space-y-6">
+              <div className="flex justify-between space-y-6 ">
                 <div className="flex items-center gap-3">
                   <Avatar>
                     <AvatarImage
@@ -69,25 +70,27 @@ const Header = () => {
                     </span>
                   </div>
                 </div>
-
-                <Button
-                  variant={"outline"}
-                  size={"icon"}
-                  onClick={() => authClient.signOut()}
-                >
-                  <LogOut />
-                </Button>
               </div>
             ) : (
               <div className="flex items-center justify-between">
                 <h2 className="font-semibold">Olá. Faça seu login!</h2>
-                <Button size={"icon"} asChild variant={"outline"}>
-                  <Link href={"/authentication"} className="cursor-pointer">
+                <Button
+                  asChild
+                  className="cursor-pointer rounded-full w-[114px]"
+                >
+                  <Link href={"/authentication"}>
+                    Login
                     <LogInIcon />
                   </Link>
                 </Button>
               </div>
             )}
+            <Separator
+              orientation="horizontal"
+              className="w-full border-[1.76px] rounded-full bg-[#EEEEEE]"
+            />
+
+            <MenuOptionsComponent />
           </SheetContent>
         </Sheet>
       </div>
