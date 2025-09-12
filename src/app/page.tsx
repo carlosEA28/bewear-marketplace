@@ -25,6 +25,7 @@ export default async function Home() {
   return (
     <>
       <Header />
+
       <div className="space-y-6">
         <div className="px-5">
           <Image

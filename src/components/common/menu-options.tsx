@@ -1,12 +1,30 @@
+"use client";
+
 import { HouseIcon, LogOut, Truck } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
+import { GetAllCategories } from "@/actions/get-all-categories";
 import { authClient } from "@/lib/authClient";
 
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 
+// interface MenuOptionsProps {
+//   categories?: (typeof categoryTable.$inferSelect)[];
+// }
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 const MenuOptionsComponent = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    GetAllCategories().then(setCategories).catch(console.error);
+  }, []);
   return (
     <>
       <div className="flex flex-col space-y-4">
@@ -32,24 +50,15 @@ const MenuOptionsComponent = () => {
       />
 
       <div className="flex flex-col space-y-5 ">
-        <Link className="text-sm font-medium" href={"#"}>
-          Camisetas
-        </Link>
-        <Link className="text-sm font-medium" href={"#"}>
-          Bermuda & Shorts
-        </Link>
-        <Link className="text-sm font-medium" href={"#"}>
-          Calças
-        </Link>
-        <Link className="text-sm font-medium" href={"#"}>
-          Jaquetas & Moletons
-        </Link>
-        <Link className="text-sm font-medium" href={"#"}>
-          Tênis
-        </Link>
-        <Link className="text-sm font-medium" href={"#"}>
-          Acessórios
-        </Link>
+        {categories?.map((category) => (
+          <Link
+            key={category.id}
+            className="text-sm font-medium"
+            href={`/category/${category.slug}`}
+          >
+            {category.name}
+          </Link>
+        ))}
       </div>
 
       <Separator

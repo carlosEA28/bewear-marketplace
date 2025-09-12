@@ -2,10 +2,11 @@
 
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Separator } from "@radix-ui/react-separator";
-import { LogInIcon, LogOut, MenuIcon } from "lucide-react";
+import { LogInIcon, MenuIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { categoryTable } from "@/db/schema";
 import { authClient } from "@/lib/authClient";
 
 import { Avatar, AvatarImage } from "../ui/avatar";
@@ -19,6 +20,10 @@ import {
 } from "../ui/sheet";
 import { Cart } from "./cart";
 import MenuOptionsComponent from "./menu-options";
+
+// interface HeaderProps {
+//   category?: (typeof categoryTable.$inferSelect)[];
+// }
 
 const Header = () => {
   const session = authClient.useSession();
